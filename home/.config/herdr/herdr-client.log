@@ -1,0 +1,12 @@
+2026-07-11T05:11:54.081589Z  INFO herdr::logging: herdr starting event="app.startup" subsystem="client" outcome="started" pid=65201
+2026-07-11T05:11:54.081643Z  INFO herdr::client: connecting to server path=/Users/ryanhubbart/.config/herdr/herdr-client.sock
+2026-07-11T05:11:54.231145Z  INFO herdr::client: handshake succeeded version=16 encoding=SemanticFrame
+2026-07-11T05:13:56.550399Z  INFO herdr::logging: herdr exiting event="app.shutdown" subsystem="client" outcome="completed" pid=65201
+2026-07-11T05:17:00.965332Z  INFO herdr::logging: herdr starting event="app.startup" subsystem="client" outcome="started" pid=66572
+2026-07-11T05:17:00.965418Z  INFO herdr::client: connecting to server path=/Users/ryanhubbart/.config/herdr/herdr-client.sock
+2026-07-11T05:17:01.205759Z  INFO herdr::client: handshake succeeded version=16 encoding=SemanticFrame
+2026-07-11T05:17:26.180102Z  INFO herdr::logging: herdr exiting event="app.shutdown" subsystem="client" outcome="completed" pid=66572
+2026-07-11T05:18:47.842106Z  INFO herdr::logging: herdr starting event="app.startup" subsystem="client" outcome="started" pid=68865
+2026-07-11T05:18:47.842324Z  INFO herdr::client: connecting to server path=/Users/ryanhubbart/.config/herdr/herdr-client.sock
+2026-07-11T05:18:48.092464Z  INFO herdr::client: handshake succeeded version=16 encoding=SemanticFrame
+2026-07-11T05:21:20.769193Z  INFO herdr::logging: herdr exiting event="app.shutdown" subsystem="client" outcome="completed" pid=68865
