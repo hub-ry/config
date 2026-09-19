@@ -22,6 +22,12 @@ in
   fonts.fontconfig.enable = true;
   home.sessionVariables.EDITOR = "nvim";
 
+    # Add this block right here:
+  home.sessionPath = [
+    "/Users/ryanhubbart/.local/bin"
+  ];
+
+
   programs.zsh = {
     enable = true;
     autosuggestion.enable = true;      # ghost text from history
@@ -69,4 +75,15 @@ in
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
   home.file.".config/opencode/AGENTS.md".source =
     config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
+  home.file.".gemini/config/GEMINI.md".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/AGENTS.md";
+
+  # Agent skills across Claude, Gemini, and general agents
+  home.file.".claude/skills".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/skills";
+  home.file.".agents/skills".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/skills";
+  home.file.".gemini/config/skills".source =
+    config.lib.file.mkOutOfStoreSymlink "${dotfiles}/home/skills";
+}
 
