@@ -34,3 +34,23 @@ Write so the text reads as one person thinking about one subject for one reader,
 
 For comprehensive revisions, voice profiling, or diagnostic audits, reference the full skill at:
 `~/.gemini/config/skills/human-writing/SKILL.md`
+
+## Local LLM routing (hub)
+
+`hub` is a Ryzen 5 3500 / GTX 1650 Super box on the tailnet running Ollama.
+Two wrappers reach it. On the Mac they shell out over SSH; run on hub itself
+they detect that and talk to Ollama directly, so the same commands work on both:
+
+- `hub-llm [-m model] "prompt"` - text subtask, reads stdin. Default `qwen2.5-coder:3b`.
+- `hub-embed "text"` - 768-dim embedding via `nomic-embed-text`. `--lines` for batch.
+
+Claude Code stays the primary model. Route a subtask to `hub-llm` when ALL of:
+volume is high, the quality bar is low, and being ~80% right is acceptable.
+Good: filtering or summarizing long logs and command output, classifying or
+triaging file lists, drafting commit messages, bulk mechanical text transforms.
+
+Never route to it: anything touching correctness, multi-file reasoning,
+debugging, API or design decisions, or code that gets committed. It is a 3B
+model - it produces confident nonsense on real problems.
+
+Use `hub-embed` for any local embedding/similarity work rather than an API.

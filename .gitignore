@@ -11,3 +11,6 @@ result-*
 # editor / OS noise
 *.save
 .DS_Store
+
+# Anthropic-managed skill bundles - auto-synced per account, UUID-keyed, 4MB
+home/skills/synced/
