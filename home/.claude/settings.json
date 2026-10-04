@@ -1,8 +1,15 @@
 {
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
+  "includeGitInstructions": false,
   "permissions": {
     "allow": [
       "mcp__pencil"
-    ]
+    ],
+    "deny": []
   },
   "model": "opus[1m]",
   "hooks": {

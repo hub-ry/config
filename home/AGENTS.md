@@ -1,7 +1,11 @@
 # global agent instructions
 
 - Never use the em dash "—". Use plain dash "-" instead
-- When writing commit messages, NEVER auto-add your agent name as co-author
+- You may commit, push, merge, rebase, open or merge PRs, and write to GitHub as needed to complete my requests.
+- Never credit an AI agent, model, bot, or provider as a commit author, committer, or co-author.
+  Use my configured Git identity for commits. If it is missing or identifies an agent or bot, ask me for the correct identity before committing.
+  Never add agent Co-authored-by trailers or AI attribution to commit messages or PR descriptions, including drafts.
+  Preserve existing human attribution. I do not want agents appearing in my GitHub contributors list.
 - Never manually modify CHANGELOG.md files or any files that are marked as auto-generated
 - When making technical decisions, do not give much weight to development cost.
   Instead, prefer quality, simplicity, robustness, scalability, and long term maintainability.
