@@ -3,6 +3,8 @@ home/.config/herdr/*.log
 home/.config/herdr/*.sock
 home/.config/herdr/session.json
 home/.config/herdr/release-notes.json
+home/.config/herdr/*
+!home/.config/herdr/config.toml
 
 # nix build outputs
 result
@@ -14,3 +16,26 @@ result-*
 
 # Anthropic-managed skill bundles - auto-synced per account, UUID-keyed, 4MB
 home/skills/synced/
+
+# Agent credentials and machine-local runtime state are never portable config.
+home/.omp/
+home/.claude/.credentials.json
+home/.claude/projects/
+home/.claude/sessions/
+home/.claude/history.jsonl
+home/.codex/auth.json
+home/.codex/sessions/
+home/.codex/*sqlite*
+home/.gemini/antigravity-cli/
+
+# Personal context belongs outside this public repository.
+context/
+home/context/
+home/conversation_context.md
+
+# Environment files and private keys
+.env
+.env.*
+!.env.example
+*.pem
+*.key

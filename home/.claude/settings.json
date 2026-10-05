@@ -11,7 +11,6 @@
     ],
     "deny": []
   },
-  "model": "opus[1m]",
   "hooks": {
     "SessionStart": [
       {
@@ -63,10 +62,16 @@
   "effortLevel": "low",
   "modelSettings": {
     "claude-opus-5-5": {
-      "effortLevel": "low"
+      "effortLevel": "high"
+    },
+    "claude-fable-5-1": {
+      "effortLevel": "medium"
     }
   },
   "tui": "fullscreen",
-  "skipDangerousModePermissionPrompt": true,
-  "theme": "dark"
+  "skipDangerousModePermissionPrompt": false,
+  "theme": "dark",
+  "enabledPlugins": {
+    "rust-analyzer-lsp@claude-plugins-official": true
+  }
 }

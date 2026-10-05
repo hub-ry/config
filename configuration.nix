@@ -32,9 +32,8 @@
   };
   homebrew = {
     enable = true;
-    onActivation.cleanup = "zap";  # remove anything not listed here
+    onActivation.cleanup = "none"; # keep packages and application data
     onActivation.autoUpdate = true;
-    onActivation.extraFlags = [ "--force" ];
     brews = [
   "herdr"
   "dart"

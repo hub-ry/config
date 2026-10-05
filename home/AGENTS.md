@@ -48,8 +48,9 @@ they detect that and talk to Ollama directly, so the same commands work on both:
 - `hub-llm [-m model] "prompt"` - text subtask, reads stdin. Default `qwen2.5-coder:3b`.
 - `hub-embed "text"` - 768-dim embedding via `nomic-embed-text`. `--lines` for batch.
 
-Claude Code stays the primary model. Route a subtask to `hub-llm` when ALL of:
-volume is high, the quality bar is low, and being ~80% right is acceptable.
+omp is the main agent workflow, with Antigravity, Claude, and Codex available.
+Route a subtask to `hub-llm` only when volume is high, the quality bar is low,
+and being ~80% right is acceptable.
 Good: filtering or summarizing long logs and command output, classifying or
 triaging file lists, drafting commit messages, bulk mechanical text transforms.
 
@@ -58,3 +59,10 @@ debugging, API or design decisions, or code that gets committed. It is a 3B
 model - it produces confident nonsense on real problems.
 
 Use `hub-embed` for any local embedding/similarity work rather than an API.
+
+## Shared context on hub
+
+On hub, read `/home/ryanhubbart/context/MAIN.md` for Ryan's main context.
+`/home/ryanhubbart/context/PATHS.md` lists the paths to detailed memories,
+project goals, skills, and historical context. Read the relevant files for the
+task and follow the current user request when older notes disagree.
