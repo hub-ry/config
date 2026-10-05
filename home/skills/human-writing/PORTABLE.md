@@ -38,10 +38,11 @@ and it will not fade on its own.
 4. **Words.** Stock phrases, borrowed register.
 5. **Mechanics.** Typography, formatting, paste artifacts.
 
-Structure outranks words for a measured reason. When researchers stripped every surface
-artifact out of AI-generated stories, a classifier using only structural features still
-identified them at 93.9%, against 95.5% before the edit. Rewriting the prose bought 1.6
-points. Swapping words alone does almost nothing.
+Structure outranks words for a measured reason. In a study of AI-generated and human
+fiction, a classifier using only structural narrative choices separated the two at 93.2%
+macro-F1, and about 95.5% with style features added. After a pass rewrote every surface
+artifact out of the AI stories, the reported score was still 93.9%. Swapping words helps
+the reader but leaves the shape of the reasoning where it was.
 
 ## Integrity, which is not negotiable
 
@@ -64,8 +65,9 @@ points. Swapping words alone does almost nothing.
 split across two sentences, three parallel examples, the same closer under every heading. A
 phrase can be fine alone and a defect in a cluster.
 
-**2. Fix facts first.** List the substantive claims, their type, their source, and their
-certainty, before moving any sentences.
+**2. Fix facts first.** Before moving any sentences, know which claims the text makes, their
+source, and their certainty. For a structural rewrite, a long piece, or anything cited,
+write them down with their type. A light pass needs less.
 
 **3. Repair structure.** The part that matters and the part that gets skipped. Write one
 line per paragraph naming its job. Read that list, not the prose. Then ask: which paragraph
@@ -77,9 +79,10 @@ sources evidence or decoration? Does every paragraph run the same move?
 paragraph: say what it is for, find its strongest specific detail, decide what the reader
 needs first, write it again from there.
 
-**5. Check.** Every supported claim survived, no new facts appeared, and the four tells that
-most often survive a rewrite are gone: the not-X-but-Y contrast, the one-line closer, the
-forced triad, the bold-label list.
+**5. Check.** Every supported claim survived or was cut for a reason you can name (redundant,
+or cuts requested), no new facts appeared, and the four tells that most often survive a
+rewrite are gone: the not-X-but-Y contrast, the one-line closer, the forced triad, the
+bold-label list.
 
 ## The choice-space method
 
@@ -256,9 +259,13 @@ voice is still borrowed.
 
 ### The substance gate
 
-Before returning any rewrite, count the concrete claims in the original and in the rewrite.
-A concrete claim names a thing, quantity, mechanism, actor, or relationship a reader could
-check or dispute. **If the rewrite has fewer, the edit failed**, unless cuts were requested.
+Before returning a rewrite, compare what the original told the reader with what the rewrite
+tells them. A concrete claim names a thing, quantity, mechanism, actor, or relationship a
+reader could check or dispute. The test is meaning, not a count: merging duplicates,
+splitting a claim, or cutting an unsupported or redundant one changes the number without
+changing what the reader can rely on. **The edit failed** if a supported mechanism, named
+party, number, or qualification disappeared without a reason you can name, or if the gap
+was filled with commentary about the evidence. Requested cuts are a reason.
 
 Fluent prose that says less is not an improvement. It is the same failure as inflated prose,
 approached from the other side.
@@ -307,11 +314,13 @@ and why.
 
 Every pattern here describes a default choice, and a writer can make any of them on purpose.
 
-- Text written before 30 November 2022 is not AI-written.
+- A date before 30 November 2022, ChatGPT's public release, makes the current assistant
+  register less likely. It is not proof; machine-generated text existed earlier.
 - A watched phrase inside a quotation, a title, or a proper name is not a tell.
 - **Do not ban the em dash.** Human usage ranges from 0.33 to 17.12 per thousand words
-  across published essayists, a fiftyfold spread. Some current models use fewer than
-  professional writers do. Match the writer's own rate.
+  across published essayists, a fiftyfold spread. In one 2026 preprint, some models used
+  them well above the professional-writer mean and others well below it. Match the
+  writer's own rate.
 - Curly quotes come from Word, macOS, and any Chicago-styled publisher. The tell is *mixing*
   curly and straight, not curliness.
 - Correct grammar, formal register, unsourced content, and Markdown are not tells.
@@ -354,7 +363,8 @@ features. Do not output a probability.
 ## Checklist
 
 - [ ] No invented fact, source, quotation, number, date, or experience.
-- [ ] Every supported claim survived; citations still attach to their claims.
+- [ ] Every supported claim survived or was cut for a stated reason; citations still attach
+      to their claims.
 - [ ] Structure was examined, not just wording.
 - [ ] No paste artifacts, assistant residue, or cutoff disclaimers.
 - [ ] No not-X-but-Y that fails to carry information in both halves.

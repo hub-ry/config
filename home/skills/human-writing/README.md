@@ -9,7 +9,7 @@ It is not a banned-word list, and it makes no claim about AI detectors.
 
 | File | Purpose |
 |---|---|
-| `SKILL.md` | The core. Loaded on every invocation. Under 400 lines. |
+| `SKILL.md` | The core. Loaded on every invocation. |
 | `PORTABLE.md` | Self-contained single file for ChatGPT, Gemini, or any assistant without file loading. |
 | `references/tells.md` | The full catalogue, with before-and-after pairs and strength classes. |
 | `references/structure.md` | The layer that survives paraphrase. The choice-space method. |
@@ -17,7 +17,7 @@ It is not a banned-word list, and it makes no claim about AI detectors.
 | `references/voice.md` | Building a voice profile from a writer's samples. |
 | `references/evidence.md` | Every claim's source, status, and honest caveat. |
 | `scripts/scan.py` | A measuring instrument. Stdlib only, no dependencies. |
-| `tests/` | The before-and-after corpus behind `TEST_REPORT.md`. |
+| `tests/` | The before-and-after corpus behind `TEST_REPORT.md`, a local, non-independent v2.0.0 test record. |
 
 ## Install
 
@@ -56,10 +56,11 @@ phrases, such as this skill's own reference files, produces a high count by desi
 
 ## What makes it different
 
-**Structure is ranked above wording, for a measured reason.** When researchers stripped every
-surface artifact out of AI-generated stories, a classifier using only structural features
-still identified them at 93.9%, against 95.5% before the edit. Rewriting the prose bought 1.6
-points. Word-level humanising does almost nothing on its own.
+**Structure is ranked above wording, for a measured reason.** In a study of AI-generated and
+human fiction, a classifier using only structural narrative choices separated the two at
+93.2% macro-F1, and after a pass rewrote every surface artifact out of the AI stories the
+reported score was still 93.9%. Word-level humanising helps the reader but leaves that
+structure in place.
 
 **It counts signals of human writing, not just machine writing.** Standard concision advice
 tells you to cut "in order to," delete "very," and replace "is" with a stronger verb. Those
@@ -76,8 +77,9 @@ replaced by commentary about evidence, invented numbers used as texture, an apho
 end of every paragraph. These were found by blind review of this skill's own output and are
 documented in `references/tells.md`.
 
-**It carries a substance gate.** A rewrite that is less informative than its original is a
-failed rewrite, however well it reads.
+**It carries a substance gate.** A rewrite that loses supported claims without a reason is a
+failed rewrite, however well it reads. The gate compares meaning, not claim counts: cutting
+an unsupported or redundant claim is allowed.
 
 **Every empirical claim is sourced, dated, and status-marked** in `references/evidence.md`,
 including a list of widely repeated figures that could not be traced and should not be

@@ -138,6 +138,12 @@ sentences) was rewritten to 0 stock phrases, 71 nominalisations, 60% short sente
 first person, no anecdote, no joke, and technical terms intact. Sentence lengths stayed
 regular, which is correct for the genre.
 
+*Note added after v2.0.0:* `tests/tech_after.txt` states facts that `tests/tech_before.txt`
+does not: conversion to typed values, validation at startup, `ConfigError` before the server
+binds a port, and defaults declared in a schema. No source context for those facts is
+recorded in the corpus. This test shows the register and genre guardrail only. It is not
+evidence of source-preserving editing, and the counts above should not be read that way.
+
 **Regular rhythm is allowed.** The v1 report contains a technical rewrite whose
 sentence-length standard deviation fell to exactly zero and which was still the better
 paragraph. v2 states explicitly that no published target for sentence-length variance exists
@@ -177,3 +183,20 @@ Two patterns carried by v1 were retired on evidence: **false ranges** and **syno
 Both were dropped upstream in 2026, and elegant variation is now classed as a historical
 indicator caused by repetition penalties in older models. In technical prose, repeating the
 correct term is better than varying it.
+
+## Later revisions, not re-tested
+
+The results above are the v2.0.0 record and are left as they were run. Later text changes
+were made from a static review, with no new model runs or reviews:
+
+- The substance gate now compares meaning rather than claim counts. Cutting an unsupported
+  or redundant claim is allowed; the 22, 16, and 24 counts above remain as recorded.
+- Claim ledgers are scaled to the job instead of required for every edit.
+- The structural-classifier figures in `SKILL.md`, `PORTABLE.md`, `README.md`, and
+  `references/structure.md` now match the configurations listed in `references/evidence.md`
+  (93.2%, about 95.5%, 93.9%) instead of subtracting one from another.
+- A published-prose range for the sentence-length coefficient of variation was removed from
+  `references/tells.md`; no traceable source supported it.
+- Em-dash summaries now report that model rates in the cited preprint fall both above and
+  below the professional-writer mean.
+- A pre-30-November-2022 date is treated as context, not proof of human authorship.

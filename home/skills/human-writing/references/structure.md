@@ -7,17 +7,20 @@ reads as generic after the wording has been fixed.
 
 Researchers took AI-generated stories and ran a span-level rewriting pass over them,
 targeting seven categories of surface artifact: cliché, purple prose, redundant exposition,
-and similar, using few-shot examples from professional writers. Then they tested a
-classifier that had never seen a single stylistic feature, only structural narrative
-choices.
+and similar, using few-shot examples from professional writers. They also measured how well
+structural narrative choices alone separate AI stories from human ones.
 
-| Text | Detected as AI |
+| Reported configuration | Score |
 |---|---|
-| Original AI stories | 95.5% |
-| After removing every surface artifact | 93.9% |
+| Narrative features only, no style | 93.2% macro-F1 |
+| Narrative plus style features | ~95.5% |
+| After the surface-artifact pass | 93.9% |
 
-Rewriting the prose bought 1.6 points. The shape of the reasoning did not move, because
-the rewriter never touched it.
+These are separate configurations, listed in `references/evidence.md`; do not subtract one
+row from another and call the difference the value of word editing. The lesson they support
+is narrower: structural choices alone carry most of the signal, and a pass that rewrote
+every surface artifact left it in place, because the rewriter never touched the shape of
+the reasoning.
 
 The same study found that human-written stories sit in a wider, sparser region of
 structural space than AI ones, which cluster tightly together. Mean distance between the

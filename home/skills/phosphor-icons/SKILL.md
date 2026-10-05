@@ -2,12 +2,13 @@
 name: phosphor-icons
 description: >
   Guide, catalog reference, and implementation patterns for Phosphor Icons (https://phosphoricons.com/
-  and https://github.com/phosphor-icons). Use when designing user interfaces, selecting icons,
-  implementing SVG icon systems, replacing emojis with vector icons, using @phosphor-icons/core
-  or @phosphor-icons/web, and establishing consistent iconography across web applications and presentations.
+  and https://github.com/phosphor-icons). Use when the user asks for Phosphor, when choosing icons for a
+  UI that has no established icon library, or when implementing inline SVG icons from @phosphor-icons/core,
+  the @phosphor-icons/web font, or @phosphor-icons/react. Does not by itself justify replacing an existing
+  icon library or meaningful emoji.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   homepage: "https://phosphoricons.com/"
   repository: "https://github.com/phosphor-icons/homepage"
 ---
@@ -15,82 +16,192 @@ metadata:
 # Phosphor Icons Guide & Reference
 
 Phosphor is a flexible icon family for interfaces, diagrams, presentations, and design systems.
-It provides a cohesive visual language with over 1,200 icons across 6 distinct weights.
+It has over 1,200 icons, each drawn in six weights.
 
-## 1. Core Principles & Vector Specifications
+## 1. Assets, Weights, and Color
 
-- **Grid Canvas**: 256&times;256 px bounding box.
-- **Stroke Weights**:
-  - `Regular`: 16px stroke width, rounded caps (`stroke-linecap="round"`), rounded joins (`stroke-linejoin="round"`).
-  - `Bold`: 24px stroke width for strong emphasis and tiny sizes (&le;16px).
-  - `Light`: 12px stroke width for delicate, spacious UIs.
-  - `Thin`: 8px stroke width for editorial and minimal display layouts.
-  - `Fill`: Solid silhouette for active tabs, selected states, and filled badges.
-  - `Duotone`: Two-tone depth using a 0.2 opacity fill on secondary paths.
-- **Styling**: Always use `fill="none" stroke="currentColor"` so icons automatically inherit text color, dark mode themes, and hover states.
+- **Grid**: every icon uses a `0 0 256 256` viewBox.
+- **Weights**: `thin`, `light`, `regular`, `bold`, `fill`, `duotone`. Use one weight per surface. `bold` holds up better at very small sizes; `fill` suits selected or active states; `duotone` adds a 20%-opacity background layer.
+- **Official SVGs are filled outlines.** Each `@phosphor-icons/core` file is `<svg viewBox="0 0 256 256" fill="currentColor">` around one or more `<path>` elements. Every weight, including the line-looking ones, is drawn this way. Keep `fill="currentColor"` and do not add `fill="none"`, `stroke`, or `stroke-width`. Those attributes blank out or distort the official artwork.
+- **Color**: `currentColor` makes the icon follow CSS `color`, so hover states and dark themes come from your CSS. Keep the duotone `opacity="0.2"` path as shipped.
 
 ---
 
-## 2. Why Replace Emojis with Phosphor Icons
+## 2. When to Use Phosphor
 
-1. **Cross-Platform Consistency**: Emojis render completely differently on Apple (Apple Color Emoji), Google (Noto Color), Microsoft (Segoe UI Emoji), and Linux. Phosphor renders identically across every browser and operating system.
-2. **Color & Theme Harmony**: Emojis have rigid, baked-in bright colors that clash with custom palettes and dark modes. Phosphor icons inherit `currentColor` or specific brand accents.
-3. **Stroke Weight Alignment**: Phosphor icons align optically with your typography and interface rules.
-4. **Professionalism**: Eliminates cartoonish visual noise from cards, menus, tags, and buttons.
+- **Follow the project first.** If the app already uses an icon library (Lucide, Heroicons, Material Symbols, Font Awesome, a custom sprite), keep using it. Switch to Phosphor only when the user asks.
+- **Keep meaningful emoji.** Emoji in user content, reactions, chat, brand voice, or copy are content, not chrome. Replace emoji only in UI controls and labels, and only when the user asks for icons or you are building the icon system they requested.
+- **What Phosphor gives you over UI emoji**:
+  1. *Same glyph shape everywhere.* Emoji artwork comes from the platform's emoji font, so it differs between Apple, Google, Microsoft, and Linux systems. SVG icons use the same vector shape on every platform. Antialiasing and pixel snapping still vary.
+  2. *Theme control.* Emoji colors are baked in. Phosphor icons follow `currentColor` or any color you set.
+  3. *One visual family.* A single weight keeps line thickness and corner style consistent across the interface.
+
+Whether the result looks more polished is a design call for the user, not a reason to replace things on your own.
 
 ---
 
 ## 3. Implementation Patterns
 
-### Pattern A: Self-Contained Offline SVG Component (Recommended for Zero-Dep Web Apps)
+### Pattern A: Inline SVG generated from `@phosphor-icons/core` (no runtime dependency)
 
-For apps requiring zero network calls, zero npm bloat, and instant rendering:
+Copy the official assets into a generated module at build time. The app then renders inline SVG with no font, CDN, or icon package at runtime. `@phosphor-icons/core` is only a dev dependency. The files below are ES modules and need Node 16.9 or newer for the generator; serve them through a bundler or with `"type": "module"` in `package.json`.
+
+```sh
+npm install --save-dev @phosphor-icons/core
+```
 
 ```js
-// icons.js
-export const PHOSPHOR_ICONS = {
-  brain: `<path d="M168,40a40,40,0,0,0-40,40v96a40,40,0,0,0,40,40,39.9,39.9,0,0,0,38-27.6A40,40,0,0,0,216,152a39.4,39.4,0,0,0-5.7-20.4A40,40,0,0,0,208,80,40,40,0,0,0,168,40Z"/>...`,
-  folder: `<path d="M32,80a8,8,0,0,1,8-8H92.7a8.2,8.2,0,0,1,5.7,2.3L128,104h88a8,8,0,0,1,8,8v96a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8Z"/>`,
-  copy: `<rect x="40" y="40" width="136" height="136" rx="8"/><path d="M80,80v128a8,8,0,0,0,8,8H216a8,8,0,0,0,8-8V88a8,8,0,0,0-8-8H88"/>`,
-  trash: `<line x1="216" y1="56" x2="40" y2="56"/><path d="M200,56V208a8,8,0,0,1-8,8H64a8,8,0,0,1-8-8V56"/>...`,
-};
+// scripts/build-icons.mjs  (run: node scripts/build-icons.mjs)
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { createRequire } from "node:module";
 
-export function iconSvg(name, size = 16, cls = "") {
-  const inner = PHOSPHOR_ICONS[name] || "";
-  return `<svg class="ph ph-${name} ${cls}".trim() viewBox="0 0 256 256" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${inner}</svg>`;
+const require = createRequire(import.meta.url);
+const WEIGHTS = ["thin", "light", "regular", "bold", "fill", "duotone"];
+
+// Every [name, weight] pair the app renders. Names are kebab-case catalog names.
+const USED = [
+  ["brain", "regular"],
+  ["folder", "regular"],
+  ["copy", "regular"],
+  ["trash", "regular"],
+  ["warning-circle", "fill"],
+];
+
+const icons = {};
+for (const [name, weight] of USED) {
+  if (!WEIGHTS.includes(weight)) {
+    throw new Error(`Unknown Phosphor weight "${weight}" for "${name}"`);
+  }
+  // Regular files are <name>.svg; other weights are <name>-<weight>.svg.
+  const file = weight === "regular" ? `${name}.svg` : `${name}-${weight}.svg`;
+  let svg;
+  try {
+    svg = await readFile(require.resolve(`@phosphor-icons/core/assets/${weight}/${file}`), "utf8");
+  } catch (cause) {
+    throw new Error(`Phosphor icon "${name}" (${weight}) not found in @phosphor-icons/core`, { cause });
+  }
+  const inner = svg.trim().match(/^<svg\b[^>]*>([\s\S]*)<\/svg>$/)?.[1];
+  if (!inner) throw new Error(`Unexpected SVG markup in ${file}`);
+  (icons[name] ??= {})[weight] = inner;
+}
+
+await mkdir(new URL("../src/", import.meta.url), { recursive: true });
+await writeFile(
+  new URL("../src/icons.generated.js", import.meta.url),
+  `// Generated by scripts/build-icons.mjs from @phosphor-icons/core (MIT). Do not edit.\n` +
+    `export const PHOSPHOR_ICONS = ${JSON.stringify(icons, null, 2)};\n`,
+);
+```
+
+```js
+// src/icons.js
+import { PHOSPHOR_ICONS } from "./icons.generated.js";
+
+const escapeAttr = (value) =>
+  String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+
+/**
+ * Returns inline SVG markup for a generated Phosphor icon.
+ * Pass `label` only when the icon itself carries meaning (role="img" + aria-label).
+ * Without a label the icon is decorative and hidden from assistive technology.
+ */
+export function iconSvg(name, { weight = "regular", size = "1em", className = "", label } = {}) {
+  const byWeight = Object.hasOwn(PHOSPHOR_ICONS, name) ? PHOSPHOR_ICONS[name] : undefined;
+  if (!byWeight || !Object.hasOwn(byWeight, weight)) {
+    throw new Error(`Phosphor icon "${name}" (${weight}) is not generated; add it to USED in scripts/build-icons.mjs`);
+  }
+  const classes = ["ph-icon", className].filter(Boolean).join(" ");
+  const a11y = label ? `role="img" aria-label="${escapeAttr(label)}"` : `aria-hidden="true"`;
+  return (
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" ` +
+    `width="${escapeAttr(size)}" height="${escapeAttr(size)}" fill="currentColor" ` +
+    `class="${escapeAttr(classes)}" ${a11y}>${byWeight[weight]}</svg>`
+  );
 }
 ```
 
-CSS Alignment:
+Usage:
+
+```js
+import { iconSvg } from "./icons.js";
+
+// Icon-only control: the button gets the accessible name; the icon stays decorative.
+const deleteButton = `<button type="button" aria-label="Delete note">${iconSvg("trash")}</button>`;
+
+// Icon next to visible text: decorative.
+const openFolder = `<a href="/folders">${iconSvg("folder")} Folders</a>`;
+
+// Icon that carries meaning on its own: label it.
+const syncError = iconSvg("warning-circle", { weight: "fill", label: "Sync failed" });
+```
+
+Unknown names or weights fail loudly at build time (missing asset) and at render time (not generated) instead of rendering an empty `<svg>`.
+
+CSS alignment (the class is `ph-icon`, not `ph`, so it does not collide with the `@phosphor-icons/web` font classes):
+
 ```css
-.ph {
+.ph-icon {
   display: inline-block;
-  vertical-align: -0.15em;
+  vertical-align: -0.125em; /* starting point; tune against the actual font */
   flex-shrink: 0;
 }
 ```
 
-### Pattern B: Webfont / `@phosphor-icons/web`
+### Pattern B: Webfont (`@phosphor-icons/web`)
+
+Load one stylesheet per weight you use. The regular weight uses the `ph` class; other weights use `ph-<weight>` (`ph-bold`, `ph-fill`, `ph-duotone`, and so on).
 
 ```html
-<link rel="stylesheet" type="text/css" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
-<i class="ph ph-brain"></i>
-<i class="ph ph-folder"></i>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css" />
+
+<!-- Decorative next to text -->
+<a href="/folders"><i class="ph ph-folder" aria-hidden="true"></i> Folders</a>
+
+<!-- Icon-only control: name the button, hide the glyph -->
+<button type="button" aria-label="Delete note"><i class="ph ph-trash" aria-hidden="true"></i></button>
+
+<!-- Meaningful on its own -->
+<i class="ph-fill ph-warning-circle" role="img" aria-label="Sync failed"></i>
 ```
 
-### Pattern C: React / Vue / Svelte
+The CDN link needs network access. For offline or bundled apps, install the package and import the weights as modules (`import "@phosphor-icons/web/regular";`) if your bundler handles CSS imports. An unknown class name renders nothing and raises no error, so check names against the catalog. Do not override `font-family`, `font-weight`, `font-style`, or the `::before`/`::after` content on icon classes.
+
+### Pattern C: React (`@phosphor-icons/react`)
 
 ```jsx
-import { Brain, Folder, Copy, Trash } from "@phosphor-icons/react";
+import { TrashIcon, WarningCircleIcon } from "@phosphor-icons/react";
 
-<Brain size={18} weight="regular" color="currentColor" />
+export function DeleteButton({ onDelete }) {
+  return (
+    <button type="button" aria-label="Delete note" onClick={onDelete}>
+      <TrashIcon size={18} weight="regular" aria-hidden="true" />
+    </button>
+  );
+}
+
+export function SyncError() {
+  return <WarningCircleIcon size={18} weight="fill" role="img" aria-label="Sync failed" />;
+}
 ```
+
+- Props: `size`, `weight`, `color` (defaults to `currentColor`), `mirrored`, `alt`, plus any SVG attribute. `alt` only inserts a `<title>`; use `role="img"` with `aria-label` for meaningful standalone icons.
+- In 2.1.10 the exports use an `Icon` suffix (`TrashIcon`). Un-suffixed names (`Trash`) are deprecated aliases. Match the installed version.
+- `IconContext.Provider` sets defaults for a subtree. React Server Components and other no-context environments import from `@phosphor-icons/react/ssr`.
+- A misspelled icon name is a missing named export. TypeScript and most bundlers report it at build time.
+
+### Other frameworks
+
+- **Vue**: the official `@phosphor-icons/vue` package exports `Ph`-prefixed components (`PhTrash`) with the same `size`, `weight`, `color`, and `mirrored` props. Apply the accessibility rules above.
+- **Svelte, Solid, React Native, and others**: only community ports exist. Read that package's own docs before using it; this skill does not document their APIs. Pattern A works with any framework that can render an SVG string.
 
 ---
 
-## 4. Emoji to Phosphor Mapping Quick Reference
+## 4. Icon Name Quick Reference
 
-| UI Action / Concept | Former Emoji | Recommended Phosphor Icon | Icon Name |
+Use these when an action needs an icon. The emoji column shows UI emoji they can stand in for **when the user asks for that replacement**; it is not a list of emoji to remove.
+
+| UI Action / Concept | UI emoji it can replace | Phosphor Icon | Catalog name |
 | :--- | :--- | :--- | :--- |
 | **Study / Active Recall** | 🧠 | Brain | `brain` |
 | **Duplicate / Clone** | 📋 | Copy | `copy` |
@@ -104,16 +215,20 @@ import { Brain, Folder, Copy, Trash } from "@phosphor-icons/react";
 | **Minimal / Polish** | ✨ | Sparkle | `sparkle` |
 | **Code / Technical** | 💻 | Terminal Window / Code | `terminal-window` / `code` |
 | **Themes / Palettes** | 🎨 | Palette | `palette` |
-| **Alert / Warning** | ⚠️ | Warning Circle / Warning | `warning-circle` |
-| **Success / Strength** | ✅ / ✓ | Check Circle / Check | `check-circle` |
+| **Alert / Warning** | ⚠️ | Warning Circle / Warning | `warning-circle` / `warning` |
+| **Success / Strength** | ✅ / ✓ | Check Circle / Check | `check-circle` / `check` |
 | **Present / Play** | ▶️ | Play | `play` |
 | **Download / Export** | 💾 / 📥 | Download Simple | `download-simple` |
 
+React and Vue component names are the PascalCase form (`MagnifyingGlassIcon`, `PhMagnifyingGlass`).
+
 ---
 
-## 5. Best Practices Checklist
+## 5. Checklist
 
-- [x] **Set `aria-hidden="true"` on decorative icons** to prevent screen-readers from announcing raw SVG paths.
-- [x] **Use `vertical-align: -0.15em`** so inline icons align naturally with adjacent font baselines.
-- [x] **Rely on `currentColor`**: Avoid hardcoded hex fills in icon SVG strings so that `:hover`, `:active`, and dark mode work without extra code.
-- [x] **Match stroke weight to scale**: At 14–16px, Phosphor's 16px stroke remains crisp and legible on retina and non-retina screens.
+- **Decorative icons** (next to visible text that says the same thing) get `aria-hidden="true"`.
+- **Icon-only buttons and links** get an accessible name on the control (`aria-label` or visually hidden text); the icon inside stays `aria-hidden="true"`.
+- **Meaningful standalone icons** (status, warnings) get `role="img"` and an `aria-label`. Where possible, pair status icons with visible text instead of relying on the icon alone.
+- **Keep official fills.** Don't add `stroke` or `fill="none"` to Phosphor SVGs, and don't hardcode hex fills in shared markup. Set color through CSS `color`.
+- **One weight per surface.** Change weight on purpose (for example `regular` to `fill` for a selected state), not at random.
+- **Check small sizes visually.** At 16px and below, compare `regular` and `bold` on the target screens before choosing.

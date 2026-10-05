@@ -11,7 +11,7 @@ description: >
   quotations, experiences, or errors, and makes no claim about AI detectors.
 license: MIT
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
   sources:
     - "Wikipedia:Signs of AI writing (WikiProject AI Cleanup)"
     - "Russell, Rajendhran, Pham, Iyyer & Wieting, StoryScope, COLM 2026"
@@ -63,11 +63,12 @@ Fix these in this order. The order is not a preference.
 | 3. Words | stock phrases, register, borrowed vocabulary | Cheapest to fix, fastest to rot |
 | 4. Mechanics | typography, formatting, paste artifacts | Near-proof when present, trivial to fix |
 
-Layer 1 outranks layer 3 for a measured reason. When researchers took AI-generated
-stories and rewrote every surface artifact out of them, a classifier trained only on
-structural narrative choices still separated them from human writing at 93.9%, against
-95.5% before the edit. Removing clichés and purple prose bought 1.6 points. If you only
-swap words, you have done almost nothing.
+Layer 1 outranks layer 3 for a measured reason. In a study of AI-generated and human
+fiction, a classifier using only structural narrative choices, with no style features,
+separated the two at 93.2% macro-F1; adding style features raised that to about 95.5%.
+After a span-level pass rewrote the surface artifacts out of the AI stories, the reported
+score was still 93.9%. The surface pass left the structural signal in place. Word fixes
+still help the reader, but they do not change the shape of the reasoning.
 
 Word lists rot fastest of all. "Delve" peaked in 2023 and had faded by 2025. Structure
 does not move.
@@ -123,10 +124,12 @@ writing, which matters for step 3. The scanner reports; it never decides.
 
 ### 2. Fix the facts first
 
-Build a claim ledger before touching prose. For each substantive statement record: what is
-claimed, its type (fact, interpretation, opinion, definition, causal claim, comparison,
-recommendation, quotation), its source if any, and how certain it is. Structural edits move
-sentences, and a moved sentence takes its citation with it or breaks.
+Check the claims before touching prose, at a depth that matches the job. For a light pass,
+knowing which sentences carry claims and citations is enough. For a structural rewrite, a
+long piece, or anything cited, build a claim ledger: for each substantive statement record
+what is claimed, its type (fact, interpretation, opinion, definition, causal claim,
+comparison, recommendation, quotation), its source if any, and how certain it is.
+Structural edits move sentences, and a moved sentence takes its citation with it or breaks.
 
 ### 3. Repair the structure
 
@@ -136,16 +139,17 @@ the resulting list, and ask whether that shape came from the material or from ha
 
 ### 4. Rewrite from purpose, not from the flagged list
 
-Do not patch marked phrases one at a time. For each paragraph, say in one sentence what it
-is for, find its strongest specific detail, decide what the reader needs first, and write
-it again from there. If a sentence is still awkward after two attempts, rebuild the
-paragraph around its point.
+Do not patch marked phrases one at a time. For each paragraph that needs rewriting, say in
+one sentence what it is for, find its strongest specific detail, decide what the reader
+needs first, and write it again from there. If a sentence is still awkward after two
+attempts, rebuild the paragraph around its point.
 
 ### 5. Check against what you started with
 
 Read it aloud, or subvocalise it. Then verify:
 
-- Every supported claim survived. No new fact, name, number, date, quotation, or citation
+- Every supported claim survived, or was cut for a reason you can name: it was redundant,
+  or the user asked for cuts. No new fact, name, number, date, quotation, or citation
   appeared. Shape edits drop rankings and simultaneity claims most often.
 - **The rewrite is not less informative than the original.** Run the substance gate below.
   This is the most common way a humanising pass makes writing worse.
@@ -216,14 +220,19 @@ like any other.
 
 ### The substance gate
 
-Before returning any rewrite, count the concrete claims in the original and in the rewrite.
-A concrete claim names a thing, a quantity, a mechanism, an actor, or a relationship that a
-reader could check or dispute.
+Before returning a rewrite, compare what the original told the reader with what the rewrite
+tells them. A concrete claim names a thing, a quantity, a mechanism, an actor, or a
+relationship that a reader could check or dispute.
 
-**If the rewrite has fewer, the edit failed**, unless the user asked for cuts. Removing an
-unsupported claim is correct; leaving a hole where it was is not. Replace it with the
-narrower claim the material does support, and keep the mechanism, the named parties, and the
-numbers that were already there.
+The test is meaning, not a count. Merging two sentences that said the same thing, splitting
+one claim into three, or deleting an unsupported or redundant claim changes the number
+without changing what the reader can rely on. Cutting an unsupported claim and saying
+nothing is a correct edit. Replace it with a narrower claim only when the material supports
+one.
+
+**The edit failed** if a supported mechanism, named party, number, or qualification
+disappeared without a reason you can name, or if the space it left was filled with
+commentary about the evidence. Requested cuts are a reason.
 
 Fluent prose that says less is not an improvement. It is the same failure as inflated prose,
 approached from the other side.
@@ -338,12 +347,15 @@ Genre-specific register targets and what to preserve in each are in `references/
 Every pattern in this skill describes a default choice, and a writer can make any of them
 on purpose.
 
-- Text written before 30 November 2022 is not AI-written.
+- A date before 30 November 2022, ChatGPT's public release, makes the current assistant
+  register less likely. It is not proof of authorship; machine-generated text existed
+  earlier.
 - A watched phrase inside a quotation, a title, a proper name, or a passage discussing the
   phrase is not a tell.
 - Weak-alone signals need company. Curly quotes come from Word, macOS, and any
-  Chicago-styled publisher. Em dashes are standard in edited prose; a 2026 study found most
-  current models use them *less* than professional writers. Passive voice is correct in
+  Chicago-styled publisher. Em dashes are standard in edited prose, and published essayists'
+  rates vary about fiftyfold; in one 2026 preprint, some models used them well above the
+  professional-writer mean and others well below it. Passive voice is correct in
   methods sections. Formal vocabulary outside the specific overused lists means nothing.
 - Correct grammar, formal register, and unsourced content are not tells. Neither is
   Markdown from someone who writes in Markdown.
@@ -392,14 +404,16 @@ Before returning prose:
 
 - [ ] No invented fact, source, quotation, number, date, or experience. This includes
       precise-sounding detail invented for texture.
-- [ ] The rewrite is not less informative than the original. Concrete claims counted.
+- [ ] The rewrite is not less informative than the original. Compared by meaning, not by
+      claim count.
 - [ ] No sentence whose real subject is the evidence rather than the topic.
 - [ ] Not every paragraph ends on a short quotable line.
 - [ ] Certainty is consistent: nothing asserted in one paragraph is reopened as an
       undecided question in another.
 - [ ] Any [source needed] marker sits on the unsupported empirical claim, not on a
       deduction that follows from something already established.
-- [ ] Every supported claim from the original survived, unless cutting was asked for.
+- [ ] Every supported claim from the original survived, unless it was redundant or cutting
+      was asked for.
 - [ ] Citations still attach to the claims they support.
 - [ ] Structure was examined, not just wording.
 - [ ] No paste artifacts, assistant residue, or cutoff disclaimers.

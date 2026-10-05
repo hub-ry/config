@@ -421,9 +421,10 @@ Do not fix this by chopping sentences. Find the place where the content itself w
 short sentence, or wants a long one, and let it. Manufactured burstiness is its own
 template.
 
-For reference, `scripts/scan.py` reports the coefficient of variation of sentence length.
-Published prose usually sits between about 0.45 and 0.75. Below 0.35, look for a reason.
-Treat that as a prompt to reread, never as a target to hit.
+For reference, `scripts/scan.py` reports the coefficient of variation of sentence length as
+description. No traceable source gives a target range for it (see `references/evidence.md`),
+and regular lengths can be right, as in technical documentation. Use it to find a run worth
+rereading, never as a number to hit.
 
 ## D5. Uniform paragraph template
 
@@ -520,11 +521,12 @@ guides.
 
 Real writers do these deliberately. Count them only with company.
 
-**Em dashes.** Standard in edited prose. A 2026 study found that among current models only
-one used em dashes more than professional writers, and one used them noticeably less. The
-signal, if any, is the *rate against the writer's own sample*, plus inconsistent spacing
-(some spaced, some not) which indicates a paste. If the writer's sample uses dashes, match
-its rate. Do not ban the mark.
+**Em dashes.** Standard in edited prose. In a 2026 single-author preprint, human essayists
+ranged about fiftyfold, and model rates ran from well above the professional-writer mean
+(GPT-4.1, Claude Opus) to well below it (GPT-5.4, and zero for both Llama Instruct models).
+The signal, if any, is the *rate against the writer's own sample*, plus inconsistent
+spacing (some spaced, some not) which indicates a paste. If the writer's sample uses
+dashes, match its rate. Do not ban the mark.
 
 **Curly quotes.** Word, macOS, iOS, LanguageTool, and every Chicago-styled publisher
 produce them. The tell is *mixing* curly and straight in one document, not curliness.
@@ -635,13 +637,17 @@ costume, and readers can tell.
 
 ## The substance gate
 
-Count the concrete claims before and after. A concrete claim names a thing, a quantity, a
-mechanism, an actor, or a relationship a reader could check or dispute.
+Compare what the original told the reader with what the rewrite tells them. A concrete claim
+names a thing, a quantity, a mechanism, an actor, or a relationship a reader could check or
+dispute.
 
-If the rewrite has fewer, the edit failed, unless cuts were requested. Removing an
-unsupported claim is right. Leaving a hole where it stood is not. Put the narrower supported
-claim in its place, and keep the mechanisms, the named parties, and the numbers that were
-already there.
+The test is meaning, not a count. Merging duplicates, splitting one claim into several, and
+deleting unsupported or redundant claims all change the number without changing what the
+reader can rely on. Cutting an unsupported claim and saying nothing is a correct edit; put a
+narrower claim in its place only when the material supports one. The edit failed if a
+supported mechanism, named party, number, or qualification disappeared without a reason you
+can name, or if the space was filled with commentary about the evidence. Requested cuts are
+a reason.
 
 Fluent prose that says less is not an improvement. It is the same failure as inflated prose,
 approached from the other side.
@@ -661,7 +667,8 @@ Do not act on these. Several point the other way.
 - **Transition words in isolation.**
 - **Unsourced content.** Most writing is unsourced.
 - **Markdown** from someone who writes in Markdown daily.
-- **Anything written before 30 November 2022.**
+- **A date before 30 November 2022** (ChatGPT's public release) makes the current assistant
+  register less likely. It is context, not proof; machine-generated text existed earlier.
 - **Plain copulas, plain verbs, flat superlatives, ordinary hedges, mildly wordy
   connectives.** These are signals of human writing. Protect them. See the
   "Do not over-tighten" section of SKILL.md.

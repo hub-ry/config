@@ -1,146 +1,65 @@
 ---
 name: readme
 description: >
-  Write, rewrite, audit, and structure project READMEs in Ryan's authentic engineering style.
-  Combines human writing principles (anti-slop, no em dashes, punchy cadence, facts-first) with
-  concrete mechanics, intuition-driven design decisions, quickstarts, complete keybind charts,
-  and straightforward hosting notes modeled after repos like phackers-hacknight1, feynman, and feynman-slides.
+  Write, rewrite, audit, and structure project READMEs in Ryan's preferred style: simple,
+  to the point, mostly bullets, few headers, no horizontal rules. Covers what the project
+  does and why, how the mechanism works, a quickstart, and keys, storage, or hosting notes
+  when the project actually has them. Builds on human-writing for prose. Never invents
+  commands, paths, URLs, hosts, or sources.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "2.0.0"
 ---
 
-# README Style Guide & Skill
+# README
 
-Write READMEs that read like one builder explaining a real system to another engineer.
+Write READMEs the way Ryan likes them: one builder telling another engineer what the thing is and how to use it, in as few words as that takes.
 
-This skill synthesizes the core human-writing guidelines with the engineering documentation style seen across Ryan's repositories (`phackers-hacknight1`, `feynman`, `swatch`, and `feynman-slides`).
+This is a stated preference, modeled on a few of his repos (`phackers-hacknight1`, `swatch`, `feynman`, `feynman-slides`). It isn't a tested measure of his voice. His own edits to a README win over anything here.
 
----
+## Default shape
 
-## 1. Core Principles & Voice
+- A title, then a bullet list. Add a header only when a part would get lost without one, like a long keys table or a quickstart block.
+- No `---` separators.
+- The first bullet says what the project does. If there's a real reason it exists or a bet behind the design, say that next.
+- Keep bullets short. A bullet can run to two sentences when the mechanism needs it.
+- Match length to the project. A small repo might need five bullets.
 
-1. **Lead with the Bet**:
-   State what the project does and the exact intuition behind it within the first two paragraphs. Do not write marketing copy. Explain the core hypothesis: why does this need to exist, and what failure mode in existing tools does it fix?
-2. **Explain Mechanisms, Not Just Features**:
-   Do not just list capabilities. Explain *why* choices were made:
-   - Why 4 taste vectors instead of 1? Because averaging two dissimilar items creates a mediocre vector that splits the difference.
-   - Why block exports on jargon? Because jargon is a label pretending to be an explanation.
-   - Why plain JSON on disk? Because a local app does not need PostgreSQL to store slides.
-3. **Ground in History or Research (When Relevant)**:
-   If a project is based on a learning technique, cognitive principle, or mathematical model, include a short 2-3 sentence quip citing real papers (with DOIs or canonical links) or historical notes (e.g. Feynman's Princeton notebook, the protégé effect, cosine similarity). Never fabricate sources.
-4. **Everything Has a Key**:
-   For interactive web apps, desktop apps, or terminal tools, document every single keyboard shortcut in a clean Markdown table.
-5. **Show the State & File Tree**:
-   Always show where files live on disk (`~/.<app>/`), how data is serialized, and any safety limits (like storage caps).
-6. **Honest Hosting Footprint**:
-   End with how it runs in production (e.g. Cloudflare Tunnel + Linux PC (`slim`)) and the live URL.
+## Include when it applies
 
----
+Only include what the project actually has. Don't add a part to complete a template, and never invent a command, path, URL, host, number, or source.
 
-## 2. Hard Writing & Mechanics Rules
+- **Why the design.** Mechanisms and tradeoffs, not just features. "Plain JSON on disk, because a local app doesn't need a database."
+- **Quickstart.** Commands that actually run in this repo, plus prerequisites and credentials.
+- **The loop.** A numbered list only if the project really runs in steps, with as many steps as it has.
+- **Keys.** For an interactive app or CLI with shortcuts, a table of them, taken from the code.
+- **Storage.** Where files live, the format, and any limits, if the project keeps state.
+- **Research or history.** A line or two with real, linked sources (DOIs or canonical links), only when the approach is based on one.
+- **Hosting.** How and where it runs and the live URL, only if it's actually deployed and the user wants that public.
+- **Limits and safety.** What it doesn't do, what it needs, and what it touches.
+- **`Casual Projects build!` opener.** Some of Ryan's project READMEs start with it. Use it only when the user says the project belongs to that set.
 
-- **Never use em dashes (`—`)**: Always use plain hyphens with spaces (` - `) or clean punctuation.
-- **Zero AI Buzzwords**: Eliminate words like *delve*, *tapestry*, *testament*, *crucial*, *paramount*, *beacon*, *foster*, *landscape*, *pivotal*, *in conclusion*, *serves as*, *stands as*, and *not just X, but Y*.
-- **Sentence Rhythm**:
-  - Keep 30-45% of sentences under 15 words.
-  - Avoid uniform paragraph lengths.
-  - Let thoughts end when they are done. Avoid padding with participial tails (", highlighting the importance of...").
-- **Plain Verbs**: Use plain copulas and active verbs (`is`, `uses`, `runs`, `stores`, `drops`, `checks`, `blocks`).
-- **Substance Gate**: An edit or rewrite must never lose concrete facts, commands, keyboard bindings, or technical limits.
+## Writing
 
----
+- Use `human-writing` for the prose: facts first, plain verbs, no stock AI phrasing, a register that fits.
+- Ryan prefers no em dashes and none of the usual stock words (*delve*, *tapestry*, *testament*, *crucial*, *pivotal*, *landscape*, *serves as*, *not just X, but Y*) in his READMEs. That's a style preference, not an authorship test. Apply it to text you write, never to quotations, code, commands, or names.
+- Mostly short sentences, with no quota. Don't chop a sentence to hit a count.
+- When editing, keep every command, keybinding, path, limit, and concrete fact unless it's wrong or the user asks to cut it. Leave quotations and code blocks exactly as they are.
 
-## 3. Structural Blueprint
+## Examples from Ryan's repos
 
-A complete project README follows this sequence:
+These show what each part looks like when a project has it. Don't carry their facts into another project.
 
-```markdown
-# project-name
+- `phackers-hacknight1` / `swatch`: data collection and embedding dimensions (12 brands, 512-d CLIP vectors), the recommendation math in plain words (normalizing vectors, subtracting the corpus average to exaggerate differences), why several taste vectors beat one (averaging two dissimilar items gives a mediocre vector that splits the difference), and a short hosting note with the live link.
+- `feynman`: a sharp opening ("Study by building a deck and then teaching it out loud. The deck is the studying; the teaching pass is the check that you actually understood it."), a four-step loop from outline to speech grading to spaced repetition, scoring as the lower of your rating and the model's, a file layout table, and "State is plain JSON on disk. No server, no database."
+- `feynman-slides`: "Slides you are not allowed to get wrong." Why the method works (Feynman's Princeton notebook, the self-explanation and protégé effects), why jargon blocks export, a full shortcut table, local storage with a 100GB safety cap, and hosting on `slim` via Cloudflare Tunnel.
 
-Casual Projects build!
+## Checklist
 
-One or two sentences summarizing the project, the core premise, and what you are not allowed to get wrong.
-
-A short paragraph detailing the bet: what happens when tools get this wrong, and why this design solves it.
-
-### Why this method? (Optional)
-Historical origin or cognitive research backing the approach, linking to real papers (DOIs).
-
-### The Loop
-1. Step 1: Input source material or configuration.
-2. Step 2: Build or run the workflow.
-3. Step 3: Feedback, checks, or validation loop.
-4. Step 4: Output, presentation, or export.
-
-### Quickstart
-```bash
-npm install (or pip install -e .)
-./bin/run-app
-```
-Brief note on prerequisites, credentials, or offline fallbacks.
-
-### Core Feature Deep-Dives
-(Break into 2-4 clean sections like `### The Critic and Blocking`, `### Fast Writing`, `### Scoring`, `### Taste Vectors`)
-- Concrete breakdown of how the mechanism works.
-- Why the constraint or design decision was made.
-
-### Keys (If UI / CLI)
-Complete table of all keyboard shortcuts:
-| Key | Action | Context |
-| :--- | :--- | :--- |
-
-### Storage and Architecture
-Directory tree and file format:
-```
-~/.project-name/
-  data/
-  config.json
-```
-Notes on database choice (e.g. plain JSON, SQLite) and quota enforcement.
-
-### Hosting
-Hosted with Cloudflare Tunnel + Linux PC (`slim`).
-
-live @ [subdomain.ryhub.dev](https://subdomain.ryhub.dev/)
-```
-
----
-
-## 4. Reference Archetypes
-
-### Archetype A: Algorithmic / Prototype Build (`phackers-hacknight1` / `swatch`)
-- Starts with `Casual Projects build!`
-- Explains data collection and embedding dimensions (e.g. 12 brands, 512-d CLIP vectors).
-- Explains recommendation math plainly: normalizing vectors to avoid Euclidean distance, subtracting corpus average to exaggerate differences.
-- Explains why multiple taste vectors beat one single vector.
-- Ends with simple hosting note and live link.
-
-### Archetype B: CLI Study Workflow (`feynman`)
-- Sharp opening: "Study by building a deck and then teaching it out loud. The deck is the studying; the teaching pass is the check that you actually understood it."
-- Four-step loop from outline to speech grading to spaced repetition.
-- Clear scoring philosophy: lower of your rating and model rating.
-- File layout table.
-- "State is plain JSON on disk. No server, no database."
-
-### Archetype C: Interactive Desktop / Web App (`feynman-slides`)
-- Sharp thesis: "Slides you are not allowed to get wrong."
-- Why the method works: Feynman's Princeton notebook, self-explanation effect, protégé effect.
-- The critic and why jargon blocks export.
-- Full table of keyboard shortcuts.
-- Local storage schema + 100GB safety cap.
-- Production hosting on `slim` via Cloudflare Tunnel.
-
----
-
-## 5. Audit & Revision Checklist
-
-Before saving a README, run this check:
-- [ ] No em dashes (`—`) anywhere in the document.
-- [ ] First sentence directly names the tool and what makes it distinct.
-- [ ] The underlying intuition or bet is clearly stated.
-- [ ] All keyboard shortcuts are captured in a clean table (if an interactive app).
-- [ ] Storage paths and data formats are explicit.
-- [ ] No stock AI vocabulary (*delve*, *tapestry*, *testament*, *crucial*, *foster*, etc.).
-- [ ] 30-45% of sentences are short (under 15 words).
-- [ ] Validated with `python3 ~/.gemini/config/skills/human-writing/scripts/scan.py README.md`.
+- [ ] The first bullet says what the project does.
+- [ ] Bullets, few headers, no `---`.
+- [ ] Every part matches something the project actually has. Nothing was filled in to complete a shape.
+- [ ] Commands, paths, keys, URLs, and numbers come from the repo or the user.
+- [ ] Sources are real and linked.
+- [ ] Quotations and code are untouched.
+- [ ] Optional: run `scripts/scan.py` from the installed `human-writing` skill on the README as a prose diagnostic. It counts patterns. It doesn't check facts or decide whether the README is done.

@@ -9,9 +9,9 @@ description: >
   when a persona or tool sounds stiff, corporate, or like documentation, or when writing
   or tuning a prompt that sets an agent's voice. Complements human-writing, which covers
   long-form prose and deliberately does not make things casual. Never trades accuracy
-  for tone.
+  or a precise instruction for tone.
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   sources:
     - "Kate Moran, The Four Dimensions of Tone of Voice, Nielsen Norman Group, 2016"
     - "Microsoft Writing Style Guide, Top 10 tips for Microsoft style and voice"
@@ -44,49 +44,62 @@ more room.
 
 ## Rules
 
-**Contractions, always.** "it's", "you'd", "won't", "that's". Microsoft's guide lists
-this under projecting friendliness, and it's the fastest single fix for stiffness.
+**Contractions where you'd say them.** "it's", "you'd", "won't", "that's". Microsoft's
+guide lists this under projecting friendliness, and it's the fastest single fix for
+stiffness.
 
 **Lead with the thing.** No openers: "Great question", "Certainly", "Sure!", "I'd be
 happy to". No sign-offs: "Let me know if", "Hope this helps", "Happy to dig in further".
 The first word should already be the answer.
 
-**One idea per sentence.** A semicolon means it's two sentences. Most lines are under 15
-words. Some are three.
+**Short sentences.** Most spoken lines are short, and a semicolon usually wants to be two
+sentences. Don't split a command, a requirement, or a precise condition just to make it
+shorter.
 
-**Plain verbs.** "use", not "utilize" or "leverage". "so", not "in order to". Drop
-the formal-register set on sight: utilize, leverage, ensure, facilitate, robust,
-essentially, additionally, furthermore, "it's worth noting", "it's important to".
+**Plain verbs.** "use", not "utilize" or "leverage". "so", not "in order to". Words like
+utilize, leverage, facilitate, robust, essentially, additionally, and furthermore usually
+read stiff here; swap them when a plainer word says the same thing. Keep the exact word
+when it's the requirement, a name, or quoted text.
 
 **Casual is not vague.** Names, numbers, versions, and commands stay exact. "a few
 seconds" is fine when you measured 2-4s. "fast" is not fine when nobody measured.
 
-**Say what you don't know, plainly.** "not sure, haven't built one of these" beats "It
-may be the case that results vary depending on several factors."
+**Say what you don't know, plainly.** "not sure, haven't checked yet" beats "It may be the
+case that results vary depending on several factors." Only claim what's true of whoever is
+speaking: no invented experience ("I've built", "in prod we saw"), measurements, or
+thresholds.
 
-**No em dashes.** Plain dash with spaces, or a new sentence.
+**Skip em dashes in this voice.** A plain dash with spaces or a new sentence reads more like
+speech. If the product's existing copy or the user's own writing uses them, match that.
 
 **Lowercase is a character choice, not a default.** A margin voice or a persona can be
 all lowercase. Docs, specs, and error messages that people copy stay in sentence case.
 
 ## Suggestions and corrections
 
-These two carry the most weight in a tool that talks to engineers, so they get a
-shape.
+**Default: say it straight.** In engineering work a precise instruction or correction is the
+respectful version. "`1..10` stops at 9. use `1..=10` to include 10." "the lock's stale -
+run `nix flake update` first." Imperatives are fine. The stiff version is the hedged one:
+"you might want to consider". Failing builds, urgent fixes, and anything someone will copy
+get the answer first.
 
-**Suggest by stating practice.** "senior engineers usually put the idempotency key in a
-unique index, so the database rejects the dupe." It's a suggestion wearing a fact. It
-only works if the practice is real and standard. A made-up "most teams" is worse than
-silence, because people repeat it.
+**Stating practice works too, when the practice is real.** "the idempotency key usually
+goes in a unique index, so the database rejects the dupe." A made-up "most teams" is worse
+than silence, because people repeat it.
 
-Never phrase a suggestion as an instruction: no "you should", "consider", "make sure",
-"be careful", "I'd recommend", "worth doing".
+### Optional: margin persona
 
-**Correct with a question, then a pointer.** "what does 0.1 + 0.2 give you as a float?
-money usually lives in integer cents." The question makes them run the case in their
-head. The pointer says where the answer lives. The question comes first. Leading with
-the right answer does their thinking for them. A question with no pointer is just a
-riddle.
+Some personas are built to nudge instead of tell: a one-line voice in the margin that wants
+the reader to work it out (the dum-intern wizard below is one). Use this only when the
+persona asks for it:
+
+- **Correct with a question, then a pointer.** "what does 0.1 + 0.2 give you as a float?
+  money usually lives in integer cents." The question makes them run the case in their
+  head. The pointer says where the answer lives. A question with no pointer is a riddle.
+- **State practice instead of giving orders.** "you should", "make sure", and "I'd
+  recommend" break this persona.
+- **Drop the persona for anything urgent, destructive, or security-related**, or when the
+  reader asks for the answer. Say it straight.
 
 ## Landing pages and product copy
 
@@ -113,15 +126,16 @@ asked what you built.
 
 ## Examples
 
-Written for this skill, not quoted from anywhere.
+Written for this skill, not quoted from anywhere. Each row names the situation instead of
+quoting a stiff line, so there's nothing bad to copy.
 
-| Stiff | Casual |
+| Situation | Casual |
 | :--- | :--- |
-| Certainly! The build failed due to a missing dependency. Please ensure that `libssl` is installed. | build failed - `libssl` isn't installed. `apt install libssl-dev` fixes it. |
-| It is worth noting that this approach may not scale effectively. | this falls over once the table's past a few million rows. |
-| I would recommend utilizing a connection pool in order to improve performance. | people usually put a pool in front of postgres here. opening a connection per request is the slow part. |
-| That is incorrect; the range `1..10` is exclusive of its upper bound. | what's the last number `1..10` hands you? the `..=` form is the one that includes the end. |
-| Great question! Unfortunately, I do not have information about that release. | haven't seen that one. give me a sec to look it up. |
+| Build failed on a missing library | build failed - `libssl` isn't installed. `apt install libssl-dev` fixes it. |
+| Scaling risk nobody has measured | no idea how this does on a big table yet. a load test on prod-sized data would tell you. |
+| Recommending a connection pool | put a pool in front of postgres here. connection setup per request is usually the slow part. |
+| Off-by-one in a Rust range | `1..10` stops at 9. use `1..=10` to include 10. |
+| Asked about a release you don't know | don't know that release. looking it up. |
 
 ## Tuning a voice prompt
 
@@ -148,12 +162,14 @@ the dum-intern wizard (a one-line margin voice on Sonnet), over several runs per
 
 ## Checklist
 
-- [ ] Contractions everywhere they'd be spoken.
+- [ ] Contractions where they'd be spoken.
 - [ ] No opener, no sign-off, no praise.
-- [ ] No semicolons. No em dashes.
-- [ ] None of the formal-register words.
-- [ ] Every "usually" or "most teams" is real practice.
-- [ ] Corrections open with the question and end with a pointer.
+- [ ] No semicolons or em dashes, unless the existing copy or the writer uses them.
+- [ ] Stiff formal words swapped for plain ones, unless the exact word is the requirement.
+- [ ] Every "usually" or "most teams" is real practice. No invented numbers, thresholds,
+      or experience.
+- [ ] Corrections and instructions are direct and exact. Question-first only for a margin
+      persona built for it, and never for an urgent fix.
 - [ ] Names, numbers, and commands are exact.
 - [ ] For a voice prompt: no quoted bad examples, no examples that match the eval, and
       anything the prompt can't hold is enforced in code.

@@ -964,8 +964,9 @@ def render(r, name=""):
             add("      rhythm, and a reader who notices the rhythm sees the machinery.")
     if total_oc == 0 and oc["n_paragraphs"] >= 4:
         add("    no lexical over-correction markers")
-    add("    Substance gate: count concrete claims in the original and in this")
-    add("    rewrite. Fewer here means the edit failed, unless cuts were asked for.")
+    add("    Substance gate: check that each supported concrete claim in the original")
+    add("    survived here or was cut for a reason (redundant, or cuts asked for).")
+    add("    Compare meaning, not counts.")
     add("")
 
     rp = r["repetition"]

@@ -33,8 +33,9 @@ author and once by each of five models. 304 extracted narrative features.
 
 **Status: active for the general lesson, fiction-only for the specific features.** The
 transferable claim is that structural choices carry authorship signal independent of style,
-and that model outputs cluster while human ones disperse. The individual feature gaps are
-measured on fiction and must not be applied to lab reports.
+and that model outputs cluster while human ones disperse. The rows are separate reported
+configurations; do not subtract one from another to price surface editing. The individual
+feature gaps are measured on fiction and must not be applied to lab reports.
 
 ### 2. The signature comes from instruction tuning
 

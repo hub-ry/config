@@ -1,6 +1,6 @@
 ---
 name: no-mistakes
-description: Validate your code changes through the no-mistakes pipeline - automated code review, tests, lint, docs, push, PR, and CI - before they reach the configured push target. Use when the user asks to run no-mistakes, gate or ship or validate their changes, push safely, asks you to do a task and then validate it, or invokes /no-mistakes.
+description: Drive the separately installed no-mistakes CLI pipeline (review, tests, lint, docs, push, PR, CI) that gates committed changes before they reach the configured push target. Use only when the user invokes /no-mistakes, explicitly asks to run no-mistakes or its gate, or clearly authorizes delivery (push, PR, ship) through it. A generic request to validate, check, test, or review changes is not permission to initialize, commit, create or move branches, push, or open a PR.
 user-invocable: true
 ---
 
@@ -28,6 +28,54 @@ ancestry. If a pipeline-control command returns
 return control to the outer executor. Safe inspection remains available through
 `no-mistakes axi status`, `no-mistakes axi logs`, help, and
 `no-mistakes doctor`.
+
+## Activation and authority
+
+This pipeline commits, pushes, opens PRs, and can move branches. Use it only
+when the user has authorized that:
+
+- **Explicit pipeline request** - `/no-mistakes`, "run no-mistakes", "put this
+  through the gate".
+- **Clear delivery authorization** - "ship this", "push it and open a PR", or
+  similar, in a repository already set up for no-mistakes.
+
+"Validate my changes", "check this", "run the tests", or "review the diff" on
+their own are not authorization. Run the project's ordinary checks instead and
+report the results; offer the pipeline if delivery seems to be the goal.
+
+Even when the skill applies, its authority is bounded:
+
+- Validate-only mode does not authorize you to commit, create branches, or
+  switch branches. If the work is uncommitted or on the default branch, report
+  that and ask how to proceed.
+- Task-first mode (`/no-mistakes <task>`) authorizes committing only the
+  task's own changes, and later fixes for that task, on a feature branch, as
+  described below. Outside task-first mode, edit or commit follow-up fixes
+  only after the user asks you to.
+- `no-mistakes init` changes repository configuration. Run it only when the
+  user asked to set up no-mistakes or approves it after you report that the
+  repository is not initialized.
+- Never install, upgrade, or reconfigure the CLI, daemon, or pipeline agent
+  unless the user asks.
+
+## Check the installed CLI first
+
+The commands, flags, output fields, and sync behavior described here are a
+contract with one version of the CLI. Before driving a run, confirm what is
+actually installed:
+
+1. `command -v no-mistakes`. If it is not found, stop: tell the user the CLI is
+   not available on this shell's `PATH`. Do not claim validation happened, and
+   do not stand in for the gate with a manual push or PR.
+2. Record the version from whatever version command `no-mistakes --help`
+   lists, and read `no-mistakes axi --help` and `no-mistakes axi run --help`.
+3. If a command, flag, or field this skill names is missing or behaves
+   differently, follow the installed CLI's help and output, tell the user about
+   the mismatch, and never invent flags or fields to fill the gap.
+4. If `no-mistakes doctor` reports the daemon or pipeline agent is not
+   runnable, report its output and stop rather than working around it.
+
+When reporting, state only what the CLI actually returned.
 
 
 When the user invokes `/no-mistakes`, report the outcome at the end. If the user
@@ -75,10 +123,13 @@ the same way once the work is committed on a feature branch.
   before its first step; `no-mistakes doctor` reports the configuration problem.
 
 If any of these is not met, `axi run` returns an `error:` with the exact command
-to fix it - read it and act on it (commit your work, or create a branch). If the
-repository is not initialized, run `no-mistakes init` first; if the `no-mistakes`
-command itself is missing or misbehaving, `no-mistakes doctor` reports what is
-wrong.
+to fix it. Read it and act within your authority (see
+[Activation and authority](#activation-and-authority)): in task-first mode you
+may commit the task's changes or create a feature branch; otherwise report the
+problem and ask. If the repository is not initialized, ask before running
+`no-mistakes init` unless the user already asked you to set it up. If the
+command misbehaves, `no-mistakes doctor` reports what is wrong; if the command
+is missing entirely, see [Check the installed CLI first](#check-the-installed-cli-first).
 Before starting, run `no-mistakes axi` (home view).
 If it shows an active run on your current branch, inspect it with `no-mistakes axi status`.
 If it is parked at a gate, drive it with `no-mistakes axi respond`.
@@ -188,15 +239,18 @@ Run the pipeline and decide on its findings as they come up:
      in the background until it is merged, closed, or its configured idle
      timeout elapses, so a human can watch it in the TUI.
    - `passed` - the changes cleared the gate and the PR was merged or closed.
-   - `failed` or `cancelled` - they did not; read the output and address it.
-     Fix whatever the output points at (a failing test, a lint error, a finding
-     you skipped), commit the fix on the same feature branch, then drive the
+   - `failed` or `cancelled` - they did not; read the output and identify what
+     it points at (a failing test, a lint error, a finding you skipped).
+     In task-first mode, or when the user has asked you to fix and resubmit,
+     fix it, commit the fix on the same feature branch, then drive the
      pipeline again - `no-mistakes axi run --intent "..."` starts a fresh run,
-     or `no-mistakes rerun` re-runs the pipeline for the current branch. This
-     is the right place to start over: a fresh run or `rerun` is a
+     or `no-mistakes rerun` re-runs the pipeline for the current branch. In
+     validate-only mode, report the failure and ask before editing or
+     committing anything. A fresh run or `rerun` is a
      *between-runs* action, correct only after a terminal outcome like this -
      never mid-run to circumvent a gate. Do not leave the user at a `failed`
-     outcome without either retrying or explaining what blocks it.
+     outcome without either retrying within your authority or explaining what
+     blocks it.
 
 Before any post-pipeline local commit or fresh run, read the structured `branch_sync` object returned by AXI home, status, or a drive result.
 Only when its `next_action.code` is `sync`, run `no-mistakes axi sync` first.
@@ -205,7 +259,7 @@ If it reports `next_action.code` is `continue_active_run`, the pipeline still ow
 When `next_action.code` is `recover_custody`, a terminal run left unpublished pipeline commits preserved in the local gate: run `no-mistakes axi sync --recover` to return custody and fast-forward to the preserved head, or `no-mistakes rerun` to resume validating it instead.
 A dirty or diverged worktree makes the recovery refuse with explicit choices; `--keep-local` keeps your current head while the preserved commits stay anchored under `refs/no-mistakes/recover/<run>`.
 If synchronization is blocked, process that structured state instead of improvising reset, stash, merge, rebase, force, or branch replacement.
-After synchronization, commit the follow-up on top and re-run `no-mistakes axi run --intent "..."` with the original user intent.
+After synchronization, if you are authorized to make follow-up changes (task-first mode, or the user asked for them), commit the follow-up on top and re-run `no-mistakes axi run --intent "..."` with the original user intent. In validate-only mode, ask before editing or committing.
 This preserves every prior gate-fix commit regardless of its configured subject.
 
 The CI step deliberately keeps watching the PR after checks pass, so
