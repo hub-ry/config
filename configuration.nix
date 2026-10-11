@@ -66,6 +66,7 @@ casks = [
   "skim"
   "stats"
   "claude-code"
+  "vorssaint"
 ];
   };
 }
